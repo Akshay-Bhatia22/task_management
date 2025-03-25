@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView, UpdateAPIView, ListAPIView
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from TaskApp.models import Task
@@ -9,9 +10,13 @@ from .serializers import TaskSerializer
 from django.contrib.auth.password_validation import validate_password
 
 # Create your views here.
-class CreateTaskView(CreateAPIView):
-    permission_classes = (AllowAny,)
+class TaskView(ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        # allows only tasks to be updated created by the login user
+        return Task.objects.filter(created_by=self.request.user.id)
 
 class AssignTaskView(APIView):
     permission_classes = (AllowAny,)
@@ -30,10 +35,11 @@ class AssignTaskView(APIView):
             task.assignee.remove(*user_ids)
             return Response(f"Assignee user ids {user_ids} deleted succesfully", status=status.HTTP_200_OK)
 
+        # add to assignee if operation not specified
         task.assignee.add(*user_ids)
         return Response(f"Assigned user ids {user_ids} succesfully", status=status.HTTP_200_OK)
         
-class GetTask(ListAPIView):
+class AssigneeTaskView(ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = TaskSerializer
 
