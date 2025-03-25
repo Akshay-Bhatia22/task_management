@@ -2,6 +2,7 @@ from django.urls import path, include
 from .views import TaskView, AssignTaskView, AssigneeTaskView
 from rest_framework.routers import DefaultRouter
 
+# router for simpler CRUD for tasks
 router = DefaultRouter()
 router.register(r'tasks', TaskView, basename='task')  
 

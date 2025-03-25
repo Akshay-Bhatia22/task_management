@@ -12,6 +12,7 @@ class TaskSerializer(ModelSerializer):
             "assignee": {"required": False}
         }
     
+    # customised create for automatically attaching login user id to created_by field in task
     def create(self, validated_data):
         request = self.context.get('request')
         if request and request.user:

@@ -9,7 +9,7 @@ from Account.models import UserAccount
 from .serializers import TaskSerializer
 from django.contrib.auth.password_validation import validate_password
 
-# Create your views here.
+# for simple CRUD of tasks
 class TaskView(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = TaskSerializer
@@ -18,8 +18,9 @@ class TaskView(ModelViewSet):
         # allows only tasks to be updated created by the login user
         return Task.objects.filter(created_by=self.request.user.id)
 
+# for assigning/ removing a task to one or more users
 class AssignTaskView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = TaskSerializer
 
     def patch(self, request, id):
@@ -38,11 +39,13 @@ class AssignTaskView(APIView):
         # add to assignee if operation not specified
         task.assignee.add(*user_ids)
         return Response(f"Assigned user ids {user_ids} succesfully", status=status.HTTP_200_OK)
-        
+
+# to view tasks assigned to user 
 class AssigneeTaskView(ListAPIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = TaskSerializer
 
     def get_queryset(self):
+        # getting id from url parameter
         assignee_id = self.kwargs["id"]
         return Task.objects.filter(assignee=assignee_id)
