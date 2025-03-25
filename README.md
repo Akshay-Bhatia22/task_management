@@ -1,10 +1,43 @@
-# Task Management API Documentation
+# Task Management Service
 
 ## Overview
-This API allows users to manage tasks by creating, updating, deleting, and assigning them to users.
+This API service allows users to manage tasks by creating, updating, deleting, and assigning them to users.
 
----
+## Setting Up
 
+### Step 1: Create and Activate Virtual Environment
+```sh
+python -m venv venv
+```
+Activate the virtual environment:
+- **Windows:**
+  ```sh
+  venv\Scripts\activate
+  ```
+- **Mac/Linux:**
+  ```sh
+  source venv/bin/activate
+  ```
+Once activated, your terminal prompt should show `(venv)` indicating the virtual environment is active.
+
+### Step 2: Install Dependencies
+```sh
+pip install -r requirements.txt
+```
+
+### Step 3: Apply Database Migrations
+```sh
+python manage.py migrate
+```
+
+### Step 4: Run the Development Server
+```sh
+python manage.py runserver 8080
+```
+This will start the server on `http://127.0.0.1:8080/`.
+
+
+## API Documentation
 ## **1. Create a Task**
 ### **Endpoint:** `POST /api/task/tasks/`
 **Description:** Allows the creation of new tasks with a name, description, and status.
